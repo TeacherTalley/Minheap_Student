@@ -1,0 +1,140 @@
+name: Autograding Tests
+'on':
+- push
+- repository_dispatch
+permissions:
+  checks: write
+  actions: read
+  contents: read
+jobs:
+  run-autograding-tests:
+    runs-on: ubuntu-latest
+    if: github.actor != 'github-classroom[bot]'
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: AutoTest Setup
+      id: autotest-setup
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: AutoTest Setup
+        setup-command: git clone https://github.com/TeacherTalley/MinHeap_AutoTest.git
+        command: cd MinHeap_AutoTest && ./AutoTest_setup.sh
+        timeout: 10
+        max-score: 0
+    - name: Coding Style
+      id: coding-style
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: Coding Style
+        setup-command: ''
+        command: "./MinHeap_AutoTest/AutoTest_Style.sh MinHeap_AutoTest minheap.cpp MinHeap.h"
+        timeout: 10
+        max-score: 10
+    - name: MinHeap Starts Empty
+      id: minheap-starts-empty
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: MinHeap Starts Empty
+        setup-command: ''
+        command: "./MinHeap_AutoTest/AutoTest_gtest.sh MinHeapTest.StartsEmpty"
+        timeout: 10
+        max-score: 5
+    - name: MinHeap Insert Single Value
+      id: minheap-insert-single-value
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: MinHeap Insert Single Value
+        setup-command: ''
+        command: "./MinHeap_AutoTest/AutoTest_gtest.sh MinHeapTest.InsertSingleValueUpdatesTopAndSize"
+        timeout: 10
+        max-score: 5
+    - name: MinHeap Peek Smallest
+      id: minheap-peek-smallest
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: MinHeap Peek Smallest
+        setup-command: ''
+        command: "./MinHeap_AutoTest/AutoTest_gtest.sh MinHeapTest.PeekAlwaysReturnsSmallestAfterInserts"
+        timeout: 10
+        max-score: 10
+    - name: MinHeap Extract Sorted
+      id: minheap-extract-sorted
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: MinHeap Extract Sorted
+        setup-command: ''
+        command: "./MinHeap_AutoTest/AutoTest_gtest.sh MinHeapTest.ExtractMinReturnsValuesInSortedOrder"
+        timeout: 10
+        max-score: 15
+    - name: MinHeap Duplicate Values
+      id: minheap-duplicate-values
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: MinHeap Duplicate Values
+        setup-command: ''
+        command: "./MinHeap_AutoTest/AutoTest_gtest.sh MinHeapTest.HandlesDuplicateValues"
+        timeout: 10
+        max-score: 10
+    - name: MinHeap Negative Positive Values
+      id: minheap-negative-positive-values
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: MinHeap Negative Positive Values
+        setup-command: ''
+        command: "./MinHeap_AutoTest/AutoTest_gtest.sh MinHeapTest.HandlesNegativeAndPositiveValues"
+        timeout: 10
+        max-score: 10
+    - name: MinHeap Peek Empty Throws
+      id: minheap-peek-empty-throws
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: MinHeap Peek Empty Throws
+        setup-command: ''
+        command: "./MinHeap_AutoTest/AutoTest_gtest.sh MinHeapTest.PeekOnEmptyThrowsOutOfRange"
+        timeout: 10
+        max-score: 10
+    - name: MinHeap Extract Empty Throws
+      id: minheap-extract-empty-throws
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: MinHeap Extract Empty Throws
+        setup-command: ''
+        command: "./MinHeap_AutoTest/AutoTest_gtest.sh MinHeapTest.ExtractMinOnEmptyThrowsOutOfRange"
+        timeout: 10
+        max-score: 10
+    - name: MinHeap Interleaved Size
+      id: minheap-interleaved-size
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: MinHeap Interleaved Size
+        setup-command: ''
+        command: "./MinHeap_AutoTest/AutoTest_gtest.sh MinHeapTest.SizeTracksInterleavedOperations"
+        timeout: 10
+        max-score: 10
+    - name: MinHeap Stress Order
+      id: minheap-stress-order
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: MinHeap Stress Order
+        setup-command: ''
+        command: "./MinHeap_AutoTest/AutoTest_gtest.sh MinHeapTest.StressInsertThenExtractMaintainsOrder"
+        timeout: 10
+        max-score: 5
+    - name: Autograding Reporter
+      uses: classroom-resources/autograding-grading-reporter@v1
+      env:
+        AUTOTEST-SETUP_RESULTS: "${{steps.autotest-setup.outputs.result}}"
+        CODING-STYLE_RESULTS: "${{steps.coding-style.outputs.result}}"
+        MINHEAP-STARTS-EMPTY_RESULTS: "${{steps.minheap-starts-empty.outputs.result}}"
+        MINHEAP-INSERT-SINGLE-VALUE_RESULTS: "${{steps.minheap-insert-single-value.outputs.result}}"
+        MINHEAP-PEEK-SMALLEST_RESULTS: "${{steps.minheap-peek-smallest.outputs.result}}"
+        MINHEAP-EXTRACT-SORTED_RESULTS: "${{steps.minheap-extract-sorted.outputs.result}}"
+        MINHEAP-DUPLICATE-VALUES_RESULTS: "${{steps.minheap-duplicate-values.outputs.result}}"
+        MINHEAP-NEGATIVE-POSITIVE-VALUES_RESULTS: "${{steps.minheap-negative-positive-values.outputs.result}}"
+        MINHEAP-PEEK-EMPTY-THROWS_RESULTS: "${{steps.minheap-peek-empty-throws.outputs.result}}"
+        MINHEAP-EXTRACT-EMPTY-THROWS_RESULTS: "${{steps.minheap-extract-empty-throws.outputs.result}}"
+        MINHEAP-INTERLEAVED-SIZE_RESULTS: "${{steps.minheap-interleaved-size.outputs.result}}"
+        MINHEAP-STRESS-ORDER_RESULTS: "${{steps.minheap-stress-order.outputs.result}}"
+      with:
+        runners: autotest-setup,coding-style,minheap-starts-empty,minheap-insert-single-value,minheap-peek-smallest,minheap-extract-sorted,minheap-duplicate-values,minheap-negative-positive-values,minheap-peek-empty-throws,minheap-extract-empty-throws,minheap-interleaved-size,minheap-stress-order
