@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Lab_minheap.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h3 id="p-style%22text-align-center%22lab-bst-p"><p style="text-align: center;">Lab BST </p></h3>
+<h3 id="p-style%22text-align-center%22data-structures-csci-2320"><p style="text-align: center;">Data Structures CSCI 2320</h3>
+<h4 id="lab-objective">Lab Objective</h4>
+<p>Learn how to implement and use a Heap ADT in C++.</p>
+<h4 id="lab-overview">Lab Overview</h4>
+<p>You will receive a partial implementation of a Heap in C++.  Your mission is to implement some of the methods for the class as well as understand all the other methods.</p>
+<h4 id="lab-tasks">Lab Tasks</h4>
+<p>Implement the following methods for the Heap class in <strong><code>minheap.cpp</code></strong>:</p>
+<ul>
+<li><strong><code>void insert(int val);</code></strong> This method add a value to the heap per heap rules.</li>
+<li><strong><code>int peek();</code></strong> This method returns the value at the top of the heap.</li>
+<li><strong><code>int extractMin();</code></strong> This method removes and returns the value at the top of the heap.</li>
+</ul>
+<h4 id="final-output">Final output</h4>
+<p>Your program must compile and produce output.</p>
+<h5 id="rubric">Rubric</h5>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Description</th>
+<th>Points</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Coding Style</td>
+<td>Run cpplint on student code</td>
+<td>10</td>
+</tr>
+<tr>
+<td>MinHeap Starts Empty</td>
+<td>Heap initializes with size 0</td>
+<td>5</td>
+</tr>
+<tr>
+<td>MinHeap Insert Single Value</td>
+<td>Inserting one value updates top and size</td>
+<td>5</td>
+</tr>
+<tr>
+<td>MinHeap Peek Smallest</td>
+<td><code>peek()</code> returns the smallest value after inserts</td>
+<td>10</td>
+</tr>
+<tr>
+<td>MinHeap Extract Sorted</td>
+<td><code>extractMin()</code> returns values in ascending order</td>
+<td>15</td>
+</tr>
+<tr>
+<td>MinHeap Duplicate Values</td>
+<td>Correctly handles duplicate values</td>
+<td>10</td>
+</tr>
+<tr>
+<td>MinHeap Negative Positive Values</td>
+<td>Correctly handles negative and positive values</td>
+<td>10</td>
+</tr>
+<tr>
+<td>MinHeap Peek Empty Throws</td>
+<td><code>peek()</code> on empty heap throws <code>std::out_of_range</code></td>
+<td>10</td>
+</tr>
+<tr>
+<td>MinHeap Extract Empty Throws</td>
+<td><code>extractMin()</code> on empty heap throws <code>std::out_of_range</code></td>
+<td>10</td>
+</tr>
+<tr>
+<td>MinHeap Interleaved Size</td>
+<td>Size tracks correctly across interleaved operations</td>
+<td>10</td>
+</tr>
+<tr>
+<td>MinHeap Stress Order</td>
+<td>Maintains min-heap order under stress inserts/extracts</td>
+<td>5</td>
+</tr>
+<tr>
+<td>Total Points</td>
+<td></td>
+<td>100</td>
+</tr>
+</tbody>
+</table>
+<h4 id="due-dates-and-honor">Due Dates and Honor</h4>
+<p>The due date is specified on Blackboard.</p>
+<p>This is an <em><strong>independent</strong></em> programming project, and it is very important that you understand and abide by the <em><strong>academic integrity policy</strong></em> concerning programming projects.  Remember, your personal honor and integrity is far more important than your grade on the project.</p>
+<h4 id="grading">Grading</h4>
+<p>This lab is available in GitHub Classroom.  Accept the URL on Blackboard and then clone your repository to your machine for development. Your lab will be graded automatically via GitHub.  Please check the grading results each time you check in your code.  Your final grade will be based upon your last sync to GitHub before the deadline.</p>
+<h4 id="project-artifacts">Project Artifacts</h4>
+<p>The following should be completed by the due date/time specified on Blackboard.</p>
+<ul>
+<li>Check in all source code changes to your GitHub repository.  Please check your URL using a web browser to verify that your changes have been synced.</li>
+<li>Submit the URL for your repository to Blackboard.</li>
+</ul>
+<p style="font-size:120%;color:navy;background:linen;padding:10px;text-align:center">&copy; Copyright 2026 by Michelle Talley <br> <br>You may not publish this document on any website or share it with anyone without explicit permission of the author. </p>
+
+</body>
+</html>
