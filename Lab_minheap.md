@@ -1,4 +1,4 @@
-### <p style="text-align: center;">Lab BST </p>
+### <p style="text-align: center;">Lab Minheap </p>
 ### <p style="text-align: center;">Data Structures CSCI 2320
 
 #### Lab Objective
