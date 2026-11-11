@@ -9,7 +9,7 @@ You will receive a partial implementation of a Heap in C++.  Your mission is to 
 
 #### Lab Tasks
 
-Implement the following methods for the Heap class in **`minheap.cpp`**:
+Implement the following methods for the Heap class in **`MinHeap.h`**:
 - **`void insert(int val);`** This method add a value to the heap per heap rules.
 - **`int peek();`** This method returns the value at the top of the heap. 
 - **`int extractMin();`** This method removes and returns the value at the top of the heap. 
